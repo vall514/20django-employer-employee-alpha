@@ -1,0 +1,164 @@
+{% extends 'partials/base.html' %}
+{% block title %}HR Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">Pending Leave Approvals</div>
+            <div class="card-body">
+                {% if leave_requests %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in leave_requests %}
+                                <tr>
+                                    <td>{{ leave.employee.username }}</td>
+                                    <td>{{ leave.start_date }}</td>
+                                    <td>{{ leave.end_date }}</td>
+                                    <td>{{ leave.reason }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'core:leave_approve' leave.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                            <button name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No pending leave approvals.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">All Employees</div>
+            <div class="card-body">
+                {% if all_employees %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in all_employees %}
+                                <tr>
+                                    <td>{{ employee.username }}</td>
+                                    <td>{{ employee.role|title }}</td>
+                                    <td>{{ employee.department.name|default:"None" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No employees found.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">All Reports</div>
+            <div class="card-body">
+                {% if reports %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Month</th>
+                                <th>Description</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                                <tr>
+                                    <td>{{ report.employee.username }}</td>
+                                    <td>{{ report.month|date:"F Y" }}</td>
+                                    <td>{{ report.description }}</td>
+                                    <td>
+                                        {% if report.file %}
+                                            <a href="{{ report.file.url }}">Download</a>
+                                        {% else %}
+                                            No file
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No reports submitted.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">All Appraisals</div>
+            <div class="card-body">
+                {% if appraisals %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                                <th>Evaluator</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appraisal in appraisals %}
+                                <tr>
+                                    <td>{{ appraisal.employee.username }}</td>
+                                    <td>{{ appraisal.score }}</td>
+                                    <td>{{ appraisal.date }}</td>
+                                    <td>{{ appraisal.evaluator.username }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No appraisals recorded.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">All Attendance</div>
+            <div class="card-body">
+                {% if attendance %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Date</th>
+                                <th>Check-In Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for att in attendance %}
+                                <tr>
+                                    <td>{{ att.employee.username }}</td>
+                                    <td>{{ att.date }}</td>
+                                    <td>{{ att.check_in_time }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No attendance records.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

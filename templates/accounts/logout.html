@@ -1,0 +1,12 @@
+{% extends 'partials/base.html' %}
+{% block title %}Logout{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h2 class="mb-4">You have been logged out</h2>
+        <p class="mb-4">Thank you for using Swahilipot Hub EMS. Would you like to log in again?</p>
+        <a href="{% url 'accounts:login' %}" class="btn btn-primary">Log In</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Return to Home</a>
+    </div>
+</div>
+{% endblock %}

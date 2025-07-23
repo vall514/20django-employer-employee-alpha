@@ -1,0 +1,73 @@
+{% extends 'partials/base.html' %}
+{% block title %}HOD Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">Pending Leave Requests</div>
+            <div class="card-body">
+                {% if leave_requests %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Reason</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leave in leave_requests %}
+                                <tr>
+                                    <td>{{ leave.employee.username }}</td>
+                                    <td>{{ leave.start_date }}</td>
+                                    <td>{{ leave.end_date }}</td>
+                                    <td>{{ leave.reason }}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'core:leave_approve' leave.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button name="action" value="approve" class="btn btn-success btn-sm">Approve</button>
+                                            <button name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No pending leave requests.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">Employees in Your Department</div>
+            <div class="card-body">
+                {% if employees %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                                <tr>
+                                    <td>{{ employee.username }}</td>
+                                    <td>
+                                        <a href="{% url 'core:appraisal' employee.id %}" class="btn btn-primary btn-sm">Submit Appraisal</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No employees in your department.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

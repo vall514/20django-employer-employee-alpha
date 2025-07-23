@@ -1,0 +1,28 @@
+{% extends 'partials/base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg p-5 mb-5 bg-white rounded">
+                <h1 class="display-4 text-center mb-4">Welcome to Swahilipot Hub EMS</h1>
+                <p class="lead text-center">Empowering Swahilipot Hub Foundation with Efficient Employee Management</p>
+                <hr class="my-4">
+                <p>Soilport EMS is a comprehensive Employee Management System developed under the <strong>Swahilipot Hub Foundation</strong>, designed to streamline workforce operations for organizations in Mombasa and beyond. Our platform supports employees, department heads (HODs), and HR personnel with intuitive tools for:</p>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">📋 <strong>Leave Management:</strong> Request and approve leaves seamlessly.</li>
+                    <li class="list-group-item">🕒 <strong>Attendance Tracking:</strong> Daily check-ins to monitor workforce presence.</li>
+                    <li class="list-group-item">📊 <strong>Performance Appraisals:</strong> Evaluate and review employee performance.</li>
+                    <li class="list-group-item">📄 <strong>Monthly Reports:</strong> Submit and review detailed reports.</li>
+                    <li class="list-group-item">👤 <strong>Profile Management:</strong> Update personal and professional details.</li>
+                </ul>
+                <p>Built with modern technology and a user-friendly interface, Soilport EMS ensures efficient communication and management across all levels of your organization. Whether you're an employee managing your tasks, an HOD overseeing your team, or an HR professional handling company-wide operations, Soilport EMS is your one-stop solution.</p>
+                <div class="text-center mt-4">
+                    <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">Get Started - Register Now</a>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

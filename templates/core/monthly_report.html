@@ -1,0 +1,25 @@
+{% extends 'partials/base.html' %}
+{% block title %}Submit Monthly Report{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Submit Monthly Report</h2>
+        <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="month" class="form-label">Month</label>
+                <input type="month" class="form-control" id="month" name="month" required>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">File (Optional)</label>
+                <input type="file" class="form-control" id="file" name="file">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Report</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'partials/base.html' %}
+{% block title %}Check In{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Daily Check-In</h2>
+        <form method="post" class="card p-4 shadow-sm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="note" class="form-label">Note (Optional)</label>
+                <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Check In</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

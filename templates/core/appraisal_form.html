@@ -1,0 +1,21 @@
+{% extends 'partials/base.html' %}
+{% block title %}Submit Appraisal{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">Appraisal for {{ employee.username }}</h2>
+        <form method="post" class="card p-4 shadow-sm">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="score" class="form-label">Score (1-10)</label>
+                <input type="number" class="form-control" id="score" name="score" min="1" max="10" required>
+            </div>
+            <div class="mb-3">
+                <label for="comments" class="form-label">Comments</label>
+                <textarea class="form-control" id="comments" name="comments" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit Appraisal</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
