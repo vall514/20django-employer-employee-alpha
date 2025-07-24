@@ -1,25 +1,57 @@
 {% extends 'partials/base.html' %}
 {% block title %}Request Leave{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Request Leave</h2>
-        <form method="post" class="card p-4 shadow-sm">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="start_date" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-card overflow-hidden">
+            <div class="bg-primary text-white px-6 py-4">
+                <h2 class="text-xl font-semibold">Request Leave</h2>
             </div>
-            <div class="mb-3">
-                <label for="end_date" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
+            <div class="p-6">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="start_date" class="block text-gray-700 font-medium mb-2">Start Date</label>
+                            <input 
+                                type="date" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                id="start_date" 
+                                name="start_date" 
+                                required
+                            >
+                        </div>
+                        <div>
+                            <label for="end_date" class="block text-gray-700 font-medium mb-2">End Date</label>
+                            <input 
+                                type="date" 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" 
+                                id="end_date" 
+                                name="end_date" 
+                                required
+                            >
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="reason" class="block text-gray-700 font-medium mb-2">Reason for Leave</label>
+                        <textarea 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            id="reason" 
+                            name="reason" 
+                            rows="4"
+                            placeholder="Please provide a detailed reason for your leave request..."
+                            required
+                        ></textarea>
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+                    >
+                        <i class="fas fa-paper-plane mr-2"></i> Submit Leave Request
+                    </button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="reason" class="form-label">Reason</label>
-                <textarea class="form-control" id="reason" name="reason" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Submit Request</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,41 +1,83 @@
 {% extends 'partials/base.html' %}
 {% block title %}Profile{% endblock %}
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Update Profile</h2>
-        <form method="post" class="card p-4 shadow-sm">
+{% block main_content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-primary">Your Profile</h2>
+        <span class="px-3 py-1 bg-primary text-white rounded-full text-sm">{{ user.get_role_display }}</span>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="p-6 bg-primary text-white">
+            <div class="flex items-center">
+                <div class="w-20 h-20 rounded-full bg-white text-primary flex items-center justify-center text-3xl mr-4">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold">{{ user.get_full_name }}</h3>
+                    <p class="text-sm">{{ user.email }}</p>
+                    {% if user.department %}
+                        <p class="text-sm mt-1"><i class="fas fa-building mr-1"></i> {{ user.department.name }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <form method="post" class="p-6 space-y-6">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="first_name" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="first_name" class="form-label">First Name</label>
+                    <input type="text" class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" id="first_name" name="first_name" value="{{ user.first_name }}">
+                </div>
+                <div>
+                    <label for="last_name" class="form-label">Last Name</label>
+                    <input type="text" class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" id="last_name" name="last_name" value="{{ user.last_name }}">
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="last_name" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
-            </div>
-            <div class="mb-3">
+            
+            <div>
                 <label for="phone" class="form-label">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone }}">
+                <div class="mt-1 flex rounded-md shadow-sm">
+                    <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
+                        <i class="fas fa-phone"></i>
+                    </span>
+                    <input type="text" class="form-control focus:ring-primary focus:border-primary flex-1 block w-full rounded-none rounded-r-md" id="phone" name="phone" value="{{ profile.phone }}">
+                </div>
             </div>
-            <div class="mb-3">
+            
+            <div>
                 <label for="address" class="form-label">Address</label>
-                <textarea class="form-control" id="address" name="address">{{ profile.address }}</textarea>
+                <textarea class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" id="address" name="address" rows="3">{{ profile.address }}</textarea>
             </div>
-            <div class="mb-3">
-                <label for="date_of_birth" class="form-label">Date of Birth</label>
-                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                    <div class="mt-1 flex rounded-md shadow-sm">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
+                            <i class="fas fa-calendar"></i>
+                        </span>
+                        <input type="date" class="form-control focus:ring-primary focus:border-primary flex-1 block w-full rounded-none rounded-r-md" id="date_of_birth" name="date_of_birth" value="{{ profile.date_of_birth|date:'Y-m-d' }}">
+                    </div>
+                </div>
+                <div>
+                    <label for="department" class="form-label">Department</label>
+                    <select class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" id="department" name="department">
+                        <option value="">Select Department</option>
+                        {% for dept in departments %}
+                            <option value="{{ dept.id }}" {% if user.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="department" class="form-label">Department</label>
-                <select class="form-select" id="department" name="department">
-                    <option value="">Select Department</option>
-                    {% for dept in departments %}
-                        <option value="{{ dept.id }}" {% if user.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
-                    {% endfor %}
-                </select>
+            
+            <div class="pt-4 flex justify-end">
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save mr-2"></i> Update Profile
+                </button>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Update Profile</button>
         </form>
     </div>
 </div>

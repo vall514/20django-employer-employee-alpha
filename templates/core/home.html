@@ -1,27 +1,202 @@
 {% extends 'partials/base.html' %}
 {% block title %}Home{% endblock %}
-{% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-lg p-5 mb-5 bg-white rounded">
-                <h1 class="display-4 text-center mb-4">Welcome to Swahilipot Hub EMS</h1>
-                <p class="lead text-center">Empowering Swahilipot Hub Foundation with Efficient Employee Management</p>
-                <hr class="my-4">
-                <p>Soilport EMS is a comprehensive Employee Management System developed under the <strong>Swahilipot Hub Foundation</strong>, designed to streamline workforce operations for organizations in Mombasa and beyond. Our platform supports employees, department heads (HODs), and HR personnel with intuitive tools for:</p>
-                <ul class="list-group list-group-flush mb-4">
-                    <li class="list-group-item">📋 <strong>Leave Management:</strong> Request and approve leaves seamlessly.</li>
-                    <li class="list-group-item">🕒 <strong>Attendance Tracking:</strong> Daily check-ins to monitor workforce presence.</li>
-                    <li class="list-group-item">📊 <strong>Performance Appraisals:</strong> Evaluate and review employee performance.</li>
-                    <li class="list-group-item">📄 <strong>Monthly Reports:</strong> Submit and review detailed reports.</li>
-                    <li class="list-group-item">👤 <strong>Profile Management:</strong> Update personal and professional details.</li>
-                </ul>
-                <p>Built with modern technology and a user-friendly interface, Soilport EMS ensures efficient communication and management across all levels of your organization. Whether you're an employee managing your tasks, an HOD overseeing your team, or an HR professional handling company-wide operations, Soilport EMS is your one-stop solution.</p>
-                <div class="text-center mt-4">
-                    <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">Get Started - Register Now</a>
-                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">Log In</a>
+{% block public_content %}
+<div class="bg-primary-dark py-24 relative overflow-hidden">
+    <!-- Background pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <svg class="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M0 40L40 0M20 40L40 20M0 20L20 0" stroke="white" stroke-width="1" fill="none" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+    </div>
+    
+    <!-- Main gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-dark to-primary opacity-95"></div>
+    
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center">
+            <div class="inline-flex items-center justify-center p-1 mb-6 rounded-full bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20">
+                <span class="px-4 py-1 text-sm font-medium text-white">
+                    <i class="fas fa-star mr-1 text-accent"></i> Employee Management System
+                </span>
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                Welcome to <span class="text-accent">Soilport</span> EMS
+            </h1>
+            
+            <p class="text-xl md:text-2xl mb-10 text-gray-100 max-w-3xl mx-auto">
+                Empowering organizations with efficient employee management and streamlined workflows
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-5 mb-10">
+                <a href="{% url 'accounts:register' %}" 
+                   class="bg-accent hover:bg-accent-dark text-white font-bold text-lg py-4 px-10 rounded-lg inline-flex items-center justify-center shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    <i class="fas fa-user-plus mr-2"></i> Get Started
+                </a>
+                <a href="{% url 'accounts:login' %}" 
+                   class="bg-white hover:bg-gray-100 text-primary font-bold text-lg py-4 px-10 rounded-lg inline-flex items-center justify-center shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Log In
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-24 bg-background">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="inline-block text-sm font-semibold text-accent uppercase tracking-wider mb-2">FEATURES</span>
+            <h2 class="text-4xl font-bold text-primary mb-4 leading-tight">Comprehensive Employee Management</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto">Our platform supports employees, department heads, and HR personnel with intuitive tools for efficient workforce management.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl shadow-card p-8 hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-primary-light bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-3">Leave Management</h3>
+                <p class="text-gray-600">Request and approve leaves seamlessly with our intuitive system. Track balances and approval status in real-time.</p>
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <span class="text-primary-light font-medium flex items-center">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-1 text-sm transition-transform group-hover:translate-x-1"></i>
+                    </span>
                 </div>
             </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-8 hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-secondary-light bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-light rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-3">Attendance Tracking</h3>
+                <p class="text-gray-600">Daily check-ins to monitor workforce presence and time management. Generate detailed attendance reports.</p>
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <span class="text-secondary font-medium flex items-center">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-1 text-sm transition-transform group-hover:translate-x-1"></i>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-8 hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-accent-light bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-light rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-3">Performance Appraisals</h3>
+                <p class="text-gray-600">Evaluate and review employee performance with structured metrics and actionable feedback.</p>
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <span class="text-accent font-medium flex items-center">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-1 text-sm transition-transform group-hover:translate-x-1"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div class="bg-white rounded-xl shadow-card p-8 hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-success-light bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                <div class="w-16 h-16 bg-gradient-to-br from-success to-success-light rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-3">Monthly Reports</h3>
+                <p class="text-gray-600">Submit and review detailed reports for better decision making and team performance insights.</p>
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <span class="text-success font-medium flex items-center">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-1 text-sm transition-transform group-hover:translate-x-1"></i>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-card p-8 hover:shadow-lg transition-shadow duration-300 relative overflow-hidden group">
+                <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-warning-light bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                <div class="w-16 h-16 bg-gradient-to-br from-warning to-warning-light rounded-xl flex items-center justify-center text-white text-2xl mb-6">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-3">Profile Management</h3>
+                <p class="text-gray-600">Update personal and professional details with ease and security. Keep your information current.</p>
+                <div class="mt-4 border-t border-gray-100 pt-4">
+                    <span class="text-warning font-medium flex items-center">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-1 text-sm transition-transform group-hover:translate-x-1"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-gradient-to-br from-primary-dark to-primary text-white py-24 relative overflow-hidden">
+    <!-- Background pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <svg class="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid-alt" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M0 60L60 0M30 60L60 30M0 30L30 0" stroke="white" stroke-width="1" fill="none" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-alt)" />
+        </svg>
+    </div>
+    
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <span class="inline-block text-sm font-semibold text-accent uppercase tracking-wider mb-2">WHY CHOOSE US</span>
+            <h2 class="text-4xl font-bold mb-4">Why Choose Soilport EMS?</h2>
+            <p class="text-lg max-w-3xl mx-auto text-gray-200">Built with modern technology and a user-friendly interface, Soilport EMS ensures efficient communication and management across all levels of your organization.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl border border-white border-opacity-10 p-8 hover:bg-opacity-15 transition-all duration-300 hover:transform hover:translate-y-[-5px]">
+                <div class="w-16 h-16 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center text-accent mb-6">
+                    <i class="fas fa-bolt text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Efficient</h3>
+                <p class="text-gray-200">Streamlined processes that save time and resources. Automate routine tasks and focus on what matters.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl border border-white border-opacity-10 p-8 hover:bg-opacity-15 transition-all duration-300 hover:transform hover:translate-y-[-5px]">
+                <div class="w-16 h-16 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center text-accent mb-6">
+                    <i class="fas fa-shield-alt text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Secure</h3>
+                <p class="text-gray-200">Protected data with advanced security measures. Role-based access ensures data is only available to authorized personnel.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl border border-white border-opacity-10 p-8 hover:bg-opacity-15 transition-all duration-300 hover:transform hover:translate-y-[-5px]">
+                <div class="w-16 h-16 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center text-accent mb-6">
+                    <i class="fas fa-desktop text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">User-Friendly</h3>
+                <p class="text-gray-200">Intuitive interface designed for all skill levels. Clean, modern design that makes navigation simple and efficient.</p>
+            </div>
+            
+            <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl border border-white border-opacity-10 p-8 hover:bg-opacity-15 transition-all duration-300 hover:transform hover:translate-y-[-5px]">
+                <div class="w-16 h-16 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center text-accent mb-6">
+                    <i class="fas fa-chart-pie text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Insightful</h3>
+                <p class="text-gray-200">Data-driven reports for better decision making. Visualize performance metrics and identify trends at a glance.</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-16">
+            <a href="{% url 'accounts:register' %}" 
+               class="bg-accent hover:bg-accent-dark text-white font-bold text-lg py-4 px-10 rounded-lg inline-flex items-center justify-center shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+                <i class="fas fa-rocket mr-2"></i> Start Your Journey Today
+            </a>
         </div>
     </div>
 </div>
