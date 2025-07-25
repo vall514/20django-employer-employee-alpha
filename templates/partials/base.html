@@ -3,46 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soilport EMS - {% block title %}{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>WorkPulse EMS - {% block title %}{% endblock %}</title>
+    <!-- Tailwind CSS from CDN with custom config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'sans-serif'],
+          },
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#003366',
+                light: '#004E9A',
+                dark: '#002347',
+                hover: '#00407A',
+              },
+              secondary: {
+                DEFAULT: '#0082B3',
+                light: '#00A3D9',
+                dark: '#006690',
+              },
+              background: {
+                DEFAULT: '#F3F4F6',
+                alt: '#E5E7EB',
+                card: '#FFFFFF',
+              },
+              accent: {
+                DEFAULT: '#FF8C00',
+                light: '#FFA533',
+                dark: '#E67E00',
+              },
+              success: {
+                DEFAULT: '#2E7D32',
+                light: '#4CAF50',
+                dark: '#1B5E20',
+              },
+              warning: {
+                DEFAULT: '#F57C00',
+                light: '#FF9800',
+                dark: '#E65100',
+              },
+              danger: {
+                DEFAULT: '#D32F2F',
+                light: '#F44336',
+                dark: '#B71C1C',
+              },
+            },
+            boxShadow: {
+              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              'dropdown': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+              'button': '0 2px 4px rgba(0, 0, 0, 0.15)',
+            },
+          }
+        }
+      }
+    </script>
+    <!-- Custom styles -->
     <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="bg-background min-h-screen flex flex-col">
     {% include 'partials/navbar.html' %}
-    <div class="container-fluid">
-        <div class="row">
-            {% block content %}
-                {% if user.is_authenticated %}
-                    {% include 'partials/sidebar.html' %}
-                    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                        {% if messages %}
+    <div class="flex flex-grow">
+        {% block content %}
+            {% if user.is_authenticated %}
+                {% include 'partials/sidebar.html' %}
+                <main class="flex-grow p-4 md:p-6 bg-background">
+                    {% if messages %}
+                        <div class="mb-6">
                             {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <div class="alert-auto-dismiss p-4 mb-4 rounded-lg shadow-md 
+                                    {% if message.tags == 'success' %}bg-success-light text-white border-l-4 border-success-dark
+                                    {% elif message.tags == 'error' %}bg-danger-light text-white border-l-4 border-danger-dark
+                                    {% elif message.tags == 'warning' %}bg-warning-light text-white border-l-4 border-warning-dark
+                                    {% else %}bg-primary text-white border-l-4 border-primary-dark{% endif %} 
+                                    flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        {% if message.tags == 'success' %}
+                                            <i class="fas fa-check-circle mr-3 text-xl"></i>
+                                        {% elif message.tags == 'error' %}
+                                            <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
+                                        {% elif message.tags == 'warning' %}
+                                            <i class="fas fa-exclamation-triangle mr-3 text-xl"></i>
+                                        {% else %}
+                                            <i class="fas fa-info-circle mr-3 text-xl"></i>
+                                        {% endif %}
+                                        <span class="font-medium">{{ message }}</span>
+                                    </div>
+                                    <button type="button" class="text-white hover:text-gray-200 transition-colors" aria-label="Close" onclick="this.parentElement.remove()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             {% endfor %}
-                        {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="bg-white rounded-lg shadow-card p-6">
                         {% block main_content %}{% endblock %}
-                    </main>
-                {% else %}
-                    <main class="col-12">
-                        {% if messages %}
+                    </div>
+                </main>
+            {% else %}
+                <main class="flex-grow bg-background">
+                    {% if messages %}
+                        <div class="container mx-auto px-4 pt-6">
                             {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <div class="alert-auto-dismiss p-4 mb-4 rounded-lg shadow-md
+                                    {% if message.tags == 'success' %}bg-success-light text-white border-l-4 border-success-dark
+                                    {% elif message.tags == 'error' %}bg-danger-light text-white border-l-4 border-danger-dark
+                                    {% elif message.tags == 'warning' %}bg-warning-light text-white border-l-4 border-warning-dark
+                                    {% else %}bg-primary text-white border-l-4 border-primary-dark{% endif %} 
+                                    flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        {% if message.tags == 'success' %}
+                                            <i class="fas fa-check-circle mr-3 text-xl"></i>
+                                        {% elif message.tags == 'error' %}
+                                            <i class="fas fa-exclamation-circle mr-3 text-xl"></i>
+                                        {% elif message.tags == 'warning' %}
+                                            <i class="fas fa-exclamation-triangle mr-3 text-xl"></i>
+                                        {% else %}
+                                            <i class="fas fa-info-circle mr-3 text-xl"></i>
+                                        {% endif %}
+                                        <span class="font-medium">{{ message }}</span>
+                                    </div>
+                                    <button type="button" class="text-white hover:text-gray-200 transition-colors" aria-label="Close" onclick="this.parentElement.remove()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             {% endfor %}
-                        {% endif %}
-                        {% block public_content %}{% endblock %}
-                    </main>
-                {% endif %}
-            {% endblock %}
-        </div>
+                        </div>
+                    {% endif %}
+                    {% block public_content %}{% endblock %}
+                </main>
+            {% endif %}
+        {% endblock %}
     </div>
     {% include 'partials/footer.html' %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Main JavaScript -->
     <script src="/static/js/scripts.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

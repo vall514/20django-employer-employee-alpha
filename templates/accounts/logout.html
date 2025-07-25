@@ -1,12 +1,27 @@
 {% extends 'partials/base.html' %}
 {% block title %}Logout{% endblock %}
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-        <h2 class="mb-4">You have been logged out</h2>
-        <p class="mb-4">Thank you for using Swahilipot Hub EMS. Would you like to log in again?</p>
-        <a href="{% url 'accounts:login' %}" class="btn btn-primary">Log In</a>
-        <a href="{% url 'home' %}" class="btn btn-secondary">Return to Home</a>
+{% block public_content %}
+<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-card p-8 transform transition-all duration-300 hover:shadow-lg">
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-success mb-6 animate-pulse">
+                <i class="fas fa-check text-white text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">You have been logged out</h2>
+            <p class="text-gray-600">Thank you for using Soilport EMS. Would you like to log in again?</p>
+        </div>
+        <div class="flex flex-col space-y-4">
+            <a href="{% url 'accounts:login' %}" 
+               class="flex items-center justify-center px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-md transition duration-300 ease-in-out shadow-button transform hover:scale-105">
+                <i class="fas fa-sign-in-alt mr-2"></i>
+                <span>Log In</span>
+            </a>
+            <a href="{% url 'home' %}" 
+               class="flex items-center justify-center px-4 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-md transition duration-300 ease-in-out shadow-button transform hover:scale-105">
+                <i class="fas fa-home mr-2"></i>
+                <span>Return to Home</span>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,25 +1,59 @@
 {% extends 'partials/base.html' %}
 {% block title %}Submit Monthly Report{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Submit Monthly Report</h2>
-        <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="month" class="form-label">Month</label>
-                <input type="month" class="form-control" id="month" name="month" required>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-card overflow-hidden">
+            <div class="bg-secondary text-white px-6 py-4">
+                <h2 class="text-xl font-semibold">Submit Monthly Report</h2>
             </div>
-            <div class="mb-3">
-                <label for="file" class="form-label">File (Optional)</label>
-                <input type="file" class="form-control" id="file" name="file">
+            <div class="p-6">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-6">
+                        <label for="month" class="block text-gray-700 font-medium mb-2">Month</label>
+                        <input 
+                            type="month" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent" 
+                            id="month" 
+                            name="month" 
+                            required
+                        >
+                    </div>
+                    <div class="mb-6">
+                        <label for="file" class="block text-gray-700 font-medium mb-2">File Attachment (Optional)</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label class="flex flex-col w-full h-32 border-2 border-dashed border-gray-300 hover:bg-gray-50 hover:border-gray-400 rounded-lg cursor-pointer">
+                                <div class="flex flex-col items-center justify-center pt-7">
+                                    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                                    <p class="text-sm text-gray-500">
+                                        Drag and drop files here or click to browse
+                                    </p>
+                                </div>
+                                <input type="file" class="hidden" id="file" name="file">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="description" class="block text-gray-700 font-medium mb-2">Report Description</label>
+                        <textarea 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent"
+                            id="description" 
+                            name="description" 
+                            rows="6"
+                            placeholder="Provide a detailed description of your monthly activities and achievements..."
+                            required
+                        ></textarea>
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="w-full bg-secondary hover:bg-secondary-dark text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+                    >
+                        <i class="fas fa-file-upload mr-2"></i> Submit Monthly Report
+                    </button>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Submit Report</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

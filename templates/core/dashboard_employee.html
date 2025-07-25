@@ -1,129 +1,288 @@
 {% extends 'partials/base.html' %}
 {% block title %}Employee Dashboard{% endblock %}
-{% block content %}
-<h2 class="mb-4">Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
-<div class="row">
-    <div class="col-12">
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-primary text-white">Your Leave Requests</div>
-            <div class="card-body">
-                {% if leave_requests %}
-                    <table class="table table-hover">
+{% block main_content %}
+<div class="mb-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary-dark">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
+        <span class="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">{{ user.get_role_display }}</span>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="rounded-full bg-primary-light bg-opacity-20 p-3 mr-4">
+                        <i class="fas fa-calendar-alt text-primary text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-600 font-medium">Leave Requests</h3>
+                        <p class="text-2xl font-bold text-primary-dark">{{ leave_requests.count|default:"0" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="rounded-full bg-secondary-light bg-opacity-20 p-3 mr-4">
+                        <i class="fas fa-file-alt text-secondary text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-600 font-medium">Reports Submitted</h3>
+                        <p class="text-2xl font-bold text-primary-dark">{{ reports.count|default:"0" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="rounded-full bg-accent-light bg-opacity-20 p-3 mr-4">
+                        <i class="fas fa-star text-accent text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-600 font-medium">Appraisals</h3>
+                        <p class="text-2xl font-bold text-primary-dark">{{ appraisals.count|default:"0" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="rounded-full bg-success bg-opacity-20 p-3 mr-4">
+                        <i class="fas fa-clock text-success text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm text-gray-600 font-medium">Attendance</h3>
+                        <p class="text-2xl font-bold text-primary-dark">{{ attendance.count|default:"0" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-card overflow-hidden mb-8">
+        <div class="bg-primary text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-lg font-semibold">Your Leave Requests</h2>
+            <a href="{% url 'core:leave_request' %}" class="bg-white text-primary hover:bg-gray-100 py-2 px-4 rounded-md text-sm font-medium flex items-center">
+                <i class="fas fa-plus mr-2"></i> Request Leave
+            </a>
+        </div>
+        <div class="p-6">
+            {% if leave_requests %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
                         <thead>
-                            <tr>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Reason</th>
-                                <th>Status</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="pb-3 font-semibold text-primary-dark">Start Date</th>
+                                <th class="pb-3 font-semibold text-primary-dark">End Date</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Reason</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for leave in leave_requests %}
-                                <tr>
-                                    <td>{{ leave.start_date }}</td>
-                                    <td>{{ leave.end_date }}</td>
-                                    <td>{{ leave.reason }}</td>
-                                    <td>{{ leave.status|title }}</td>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-4">{{ leave.start_date }}</td>
+                                    <td class="py-4">{{ leave.end_date }}</td>
+                                    <td class="py-4">{{ leave.reason }}</td>
+                                    <td class="py-4">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium 
+                                            {% if leave.status == 'approved' %}bg-green-100 text-green-800
+                                            {% elif leave.status == 'rejected' %}bg-red-100 text-red-800
+                                            {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                            {{ leave.status|title }}
+                                        </span>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p>No leave requests found.</p>
-                {% endif %}
-                <a href="{% url 'core:leave_request' %}" class="btn btn-primary mt-3">Request Leave</a>
-            </div>
+                </div>
+            {% else %}
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="text-gray-400 mb-2">
+                        <i class="fas fa-calendar-times text-4xl"></i>
+                    </div>
+                    <p class="text-gray-600">No leave requests found.</p>
+                    <a href="{% url 'core:leave_request' %}" class="mt-4 bg-primary hover:bg-primary-hover text-white py-2 px-4 rounded-md text-sm font-medium">
+                        Request Your First Leave
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-primary text-white">Your Monthly Reports</div>
-            <div class="card-body">
-                {% if reports %}
-                    <table class="table table-hover">
+    </div>
+    <div class="bg-white rounded-lg shadow-card overflow-hidden mb-8">
+        <div class="bg-secondary text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-lg font-semibold">Your Monthly Reports</h2>
+            <a href="{% url 'core:monthly_report' %}" class="bg-white text-secondary hover:bg-gray-100 py-2 px-4 rounded-md text-sm font-medium flex items-center">
+                <i class="fas fa-file-upload mr-2"></i> Submit Report
+            </a>
+        </div>
+        <div class="p-6">
+            {% if reports %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
                         <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Description</th>
-                                <th>File</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="pb-3 font-semibold text-primary-dark">Month</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Description</th>
+                                <th class="pb-3 font-semibold text-primary-dark">File</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for report in reports %}
-                                <tr>
-                                    <td>{{ report.month|date:"F Y" }}</td>
-                                    <td>{{ report.description }}</td>
-                                    <td>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-4">{{ report.month|date:"F Y" }}</td>
+                                    <td class="py-4">{{ report.description }}</td>
+                                    <td class="py-4">
                                         {% if report.file %}
-                                            <a href="{{ report.file.url }}">Download</a>
+                                            <span class="text-green-600"><i class="fas fa-check-circle mr-1"></i> Uploaded</span>
                                         {% else %}
-                                            No file
+                                            <span class="text-gray-500"><i class="fas fa-times-circle mr-1"></i> No file</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-4">
+                                        {% if report.file %}
+                                            <a href="{{ report.file.url }}" class="text-primary hover:text-primary-dark">
+                                                <i class="fas fa-download mr-1"></i> Download
+                                            </a>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p>No reports submitted.</p>
-                {% endif %}
-                <a href="{% url 'core:monthly_report' %}" class="btn btn-primary mt-3">Submit Report</a>
-            </div>
+                </div>
+            {% else %}
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="text-gray-400 mb-2">
+                        <i class="fas fa-file-alt text-4xl"></i>
+                    </div>
+                    <p class="text-gray-600">No reports submitted.</p>
+                    <a href="{% url 'core:monthly_report' %}" class="mt-4 bg-secondary hover:bg-secondary-dark text-white py-2 px-4 rounded-md text-sm font-medium">
+                        Submit Your First Report
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-primary text-white">Your Appraisals</div>
-            <div class="card-body">
-                {% if appraisals %}
-                    <table class="table table-hover">
+    </div>
+    <div class="bg-white rounded-lg shadow-card overflow-hidden mb-8">
+        <div class="bg-accent text-white px-6 py-4">
+            <h2 class="text-lg font-semibold">Your Performance Appraisals</h2>
+        </div>
+        <div class="p-6">
+            {% if appraisals %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
                         <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Score</th>
-                                <th>Comments</th>
-                                <th>Evaluator</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="pb-3 font-semibold text-primary-dark">Date</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Score</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Comments</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Evaluator</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for appraisal in appraisals %}
-                                <tr>
-                                    <td>{{ appraisal.date }}</td>
-                                    <td>{{ appraisal.score }}</td>
-                                    <td>{{ appraisal.comments }}</td>
-                                    <td>{{ appraisal.evaluator.username }}</td>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-4">{{ appraisal.date }}</td>
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <span class="font-medium mr-2">{{ appraisal.score }}/5</span>
+                                            <div class="flex text-accent">
+                                                {% for i in "12345"|make_list %}
+                                                    {% if forloop.counter <= appraisal.score %}
+                                                        <i class="fas fa-star"></i>
+                                                    {% else %}
+                                                        <i class="far fa-star"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-4">{{ appraisal.comments }}</td>
+                                    <td class="py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white mr-2">
+                                                <span>{{ appraisal.evaluator.get_full_name|default:appraisal.evaluator.username|first|upper }}</span>
+                                            </div>
+                                            <span>{{ appraisal.evaluator.get_full_name|default:appraisal.evaluator.username }}</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p>No appraisals received.</p>
-                {% endif %}
-            </div>
+                </div>
+            {% else %}
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="text-gray-400 mb-2">
+                        <i class="fas fa-star text-4xl"></i>
+                    </div>
+                    <p class="text-gray-600">No appraisals received yet.</p>
+                    <p class="text-sm text-gray-500 mt-2">Performance appraisals will be conducted by your supervisor.</p>
+                </div>
+            {% endif %}
         </div>
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">Your Attendance</div>
-            <div class="card-body">
-                {% if attendance %}
-                    <table class="table table-hover">
+    </div>
+    <div class="bg-white rounded-lg shadow-card overflow-hidden">
+        <div class="bg-success text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-lg font-semibold">Your Attendance</h2>
+            <a href="{% url 'core:attendance_check_in' %}" class="bg-white text-success hover:bg-gray-100 py-2 px-4 rounded-md text-sm font-medium flex items-center">
+                <i class="fas fa-clock mr-2"></i> Check In Today
+            </a>
+        </div>
+        <div class="p-6">
+            {% if attendance %}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
                         <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Check-In Time</th>
-                                <th>Note</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="pb-3 font-semibold text-primary-dark">Date</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Check-In Time</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Note</th>
+                                <th class="pb-3 font-semibold text-primary-dark">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for att in attendance %}
-                                <tr>
-                                    <td>{{ att.date }}</td>
-                                    <td>{{ att.check_in_time }}</td>
-                                    <td>{{ att.note|default:"No note" }}</td>
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-4">{{ att.date }}</td>
+                                    <td class="py-4">{{ att.check_in_time }}</td>
+                                    <td class="py-4">{{ att.note|default:"No note" }}</td>
+                                    <td class="py-4">
+                                        {% if att.is_late %}
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-exclamation-triangle mr-1"></i> Late
+                                            </span>
+                                        {% else %}
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="fas fa-check mr-1"></i> On Time
+                                            </span>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                {% else %}
-                    <p>No attendance records.</p>
-                {% endif %}
-                <a href="{% url 'core:attendance_check_in' %}" class="btn btn-primary mt-3">Check In</a>
-            </div>
+                </div>
+            {% else %}
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="text-gray-400 mb-2">
+                        <i class="fas fa-user-clock text-4xl"></i>
+                    </div>
+                    <p class="text-gray-600">No attendance records found.</p>
+                    <a href="{% url 'core:attendance_check_in' %}" class="mt-4 bg-success hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium">
+                        Record Your First Check-In
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

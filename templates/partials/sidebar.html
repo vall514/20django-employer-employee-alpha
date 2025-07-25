@@ -1,55 +1,77 @@
-<nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-    <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link {% if request.path == '/core/dashboard/' %}active{% endif %}" href="{% url 'core:dashboard' %}">
-                    Dashboard
+<div class="w-64 bg-primary-dark text-white shadow-lg min-h-screen">
+    <div class="p-4">
+        <div class="flex items-center justify-center p-2 mb-6">
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center">
+                    <i class="fas fa-user-circle text-3xl"></i>
+                </div>
+                <div class="mt-2 text-center">
+                    <h3 class="text-white font-medium">{{ user.get_full_name }}</h3>
+                    <p class="text-xs text-gray-300">{{ user.get_role_display }}</p>
+                </div>
+            </div>
+        </div>
+        <ul>
+            <li class="mb-1">
+                <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/dashboard/' %}bg-primary{% endif %}">
+                    <i class="fas fa-tachometer-alt w-6"></i>
+                    <span>Dashboard</span>
                 </a>
             </li>
+            
             {% if user.role == 'employee' %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/leave/request/' %}active{% endif %}" href="{% url 'core:leave_request' %}">
-                        Request Leave
+                <li class="mb-1">
+                    <a href="{% url 'core:leave_request' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/request/' %}bg-primary{% endif %}">
+                        <i class="fas fa-calendar-alt w-6"></i>
+                        <span>Request Leave</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/report/submit/' %}active{% endif %}" href="{% url 'core:monthly_report' %}">
-                        Submit Report
+                <li class="mb-1">
+                    <a href="{% url 'core:monthly_report' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/report/submit/' %}bg-primary{% endif %}">
+                        <i class="fas fa-file-alt w-6"></i>
+                        <span>Submit Report</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/attendance/check-in/' %}active{% endif %}" href="{% url 'core:attendance_check_in' %}">
-                        Check In
+                <li class="mb-1">
+                    <a href="{% url 'core:attendance_check_in' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/attendance/check-in/' %}bg-primary{% endif %}">
+                        <i class="fas fa-clock w-6"></i>
+                        <span>Check In</span>
                     </a>
                 </li>
             {% elif user.role == 'hod' %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/leave/approve/' %}active{% endif %}" href="{% url 'core:dashboard' %}">
-                        Approve Leaves
+                <li class="mb-1">
+                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve/' %}bg-primary{% endif %}">
+                        <i class="fas fa-check-circle w-6"></i>
+                        <span>Approve Leaves</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/appraisal/submit/' %}active{% endif %}" href="{% url 'core:dashboard' %}">
-                        Submit Appraisals
+                <li class="mb-1">
+                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/appraisal/submit/' %}bg-primary{% endif %}">
+                        <i class="fas fa-star w-6"></i>
+                        <span>Submit Appraisals</span>
                     </a>
                 </li>
             {% elif user.role == 'hr' %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/core/leave/approve/' %}active{% endif %}" href="{% url 'core:dashboard' %}">
-                        Approve Leaves
+                <li class="mb-1">
+                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve/' %}bg-primary{% endif %}">
+                        <i class="fas fa-check-circle w-6"></i>
+                        <span>Approve Leaves</span>
                     </a>
                 </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link {% if request.path == '/accounts/profile/' %}active{% endif %}" href="{% url 'accounts:profile' %}">
-                    Profile
+            
+            <li class="my-6 border-t border-primary pt-4">
+                <a href="{% url 'accounts:profile' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/accounts/profile/' %}bg-primary{% endif %}">
+                    <i class="fas fa-user w-6"></i>
+                    <span>Profile</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:logout' %}">
-                    Logout
+            <li class="mb-1">
+                <a href="{% url 'accounts:logout' %}" class="sidebar-link rounded-md flex items-center">
+                    <i class="fas fa-sign-out-alt w-6"></i>
+                    <span>Logout</span>
                 </a>
             </li>
         </ul>
     </div>
-</nav>
+</div>
