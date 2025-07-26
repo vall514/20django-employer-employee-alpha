@@ -40,20 +40,20 @@
                 </li>
             {% elif user.role == 'hod' %}
                 <li class="mb-1">
-                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}bg-primary{% endif %}">
                         <i class="fas fa-check-circle w-6"></i>
                         <span>Approve Leaves</span>
                     </a>
                 </li>
                 <li class="mb-1">
-                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/appraisal/submit/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:appraisal_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/appraisal/list/' %}bg-primary{% endif %}">
                         <i class="fas fa-star w-6"></i>
                         <span>Submit Appraisals</span>
                     </a>
                 </li>
             {% elif user.role == 'hr' %}
                 <li class="mb-1">
-                    <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}bg-primary{% endif %}">
                         <i class="fas fa-check-circle w-6"></i>
                         <span>Approve Leaves</span>
                     </a>

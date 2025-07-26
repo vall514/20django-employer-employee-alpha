@@ -1,0 +1,84 @@
+{% extends 'partials/base.html' %}
+{% block title %}Approve Leaves{% endblock %}
+{% block main_content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-primary">Approve Leave Requests</h1>
+        <p class="text-gray-600 mt-1">Review and manage leave requests from your team members</p>
+    </div>
+    <div class="flex items-center space-x-2">
+        <span class="bg-success py-1 px-3 rounded-full text-white text-sm font-medium">
+            <i class="fas fa-user-tie mr-1"></i> HOD
+        </span>
+        <span class="text-sm text-gray-500">{{ user.email }}</span>
+    </div>
+</div>
+
+<!-- Leave Requests Section -->
+<div class="bg-white rounded-lg shadow-card overflow-hidden mb-8">
+    <div class="bg-primary text-white px-6 py-4 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Pending Leave Requests</h2>
+        <span class="bg-white text-primary py-1 px-3 rounded-full text-sm font-medium">
+            {{ leave_requests|length }} Pending
+        </span>
+    </div>
+    <div class="p-6">
+        {% if leave_requests %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for leave in leave_requests %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-primary-light text-white rounded-full flex items-center justify-center">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">{{ leave.employee.username }}</div>
+                                        <div class="text-sm text-gray-500">{{ leave.employee.email|default:"No email" }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ leave.start_date }} to {{ leave.end_date }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900 max-w-xs truncate">{{ leave.reason }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <form method="post" action="{% url 'core:leave_approve' leave.id %}" class="inline-flex space-x-2">
+                                    {% csrf_token %}
+                                    <button name="action" value="approve" class="bg-success hover:bg-success-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
+                                        <i class="fas fa-check mr-1"></i> Approve
+                                    </button>
+                                    <button name="action" value="reject" class="bg-danger hover:bg-danger-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
+                                        <i class="fas fa-times mr-1"></i> Reject
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="flex flex-col items-center justify-center py-12">
+                <div class="text-gray-400 mb-3">
+                    <i class="fas fa-calendar-check text-5xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-1">No pending leave requests</h3>
+                <p class="text-gray-500">All leave requests have been processed.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

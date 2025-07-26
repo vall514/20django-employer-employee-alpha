@@ -58,6 +58,25 @@ def leave_request_view(request):
     return render(request, 'core/leave_request.html')
 
 @login_required
+def leave_approve_list_view(request):
+    user = request.user
+    if user.role == 'hod':
+        leave_requests = LeaveRequest.objects.filter(employee__department=user.department, status='pending')
+        return render(request, 'core/leave_approve_hod.html', {
+            'leave_requests': leave_requests,
+            'user': user
+        })
+    elif user.role == 'hr':
+        leave_requests = LeaveRequest.objects.filter(status='hod_approved')
+        return render(request, 'core/leave_approve_hr.html', {
+            'leave_requests': leave_requests,
+            'user': user
+        })
+    else:
+        messages.error(request, 'Unauthorized access.')
+        return redirect('core:dashboard')
+
+@login_required
 def leave_approve_view(request, leave_id):
     leave = LeaveRequest.objects.get(id=leave_id)
     if request.user.role == 'hod' and leave.employee.department == request.user.department:
@@ -82,6 +101,12 @@ def leave_approve_view(request, leave_id):
             messages.success(request, f'Leave request {action}d.')
     else:
         messages.error(request, 'Unauthorized action.')
+    
+    # Redirect back to the appropriate leave approval page instead of dashboard
+    if request.user.role == 'hod':
+        return redirect('core:leave_approve_list')
+    elif request.user.role == 'hr':
+        return redirect('core:leave_approve_list')
     return redirect('core:dashboard')
 
 @login_required
@@ -104,6 +129,18 @@ def monthly_report_view(request):
     return render(request, 'core/monthly_report.html')
 
 @login_required
+def appraisal_list_view(request):
+    if request.user.role != 'hod':
+        messages.error(request, 'Only HODs can access appraisal management.')
+        return redirect('core:dashboard')
+    
+    employees = User.objects.filter(department=request.user.department, role='employee')
+    return render(request, 'core/appraisal_list.html', {
+        'employees': employees,
+        'user': request.user
+    })
+
+@login_required
 def appraisal_view(request, employee_id):
     if request.user.role != 'hod':
         messages.error(request, 'Only HODs can submit appraisals.')
@@ -122,7 +159,7 @@ def appraisal_view(request, employee_id):
             comments=comments
         )
         messages.success(request, 'Appraisal submitted.')
-        return redirect('core:dashboard')
+        return redirect('core:appraisal_list')
     return render(request, 'core/appraisal_form.html', {'employee': employee})
 
 @login_required
