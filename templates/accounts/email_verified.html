@@ -1,0 +1,20 @@
+{% extends 'partials/base.html' %}
+{% block title %}Email Verified{% endblock %}
+{% block public_content %}
+<div class="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full">
+        <div class="bg-white p-8 rounded-lg shadow-card text-center">
+            <div class="w-20 h-20 mx-auto bg-success-light rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-check text-success text-3xl"></i>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Email Verified Successfully!</h2>
+            <p class="text-gray-600 mb-6">Your email has been verified and your account is now active. You can now log in to access your dashboard.</p>
+            
+            <a href="{% url 'accounts:login' %}" class="btn-primary inline-flex items-center justify-center">
+                <i class="fas fa-sign-in-alt mr-2"></i> Login to Your Account
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

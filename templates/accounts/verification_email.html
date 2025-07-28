@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #00305C;
+            color: white;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #00305C;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #001f3d;
+        }
+        .details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">{{ site_name }}</div>
+            <div>Email Verification</div>
+        </div>
+        
+        <div class="content">
+            <h2>Welcome, {{ user.first_name }}!</h2>
+            
+            <p>Thank you for registering with {{ site_name }}. To complete your registration and gain full access to our employee management system, please verify your email address by clicking the button below:</p>
+            
+            <div style="text-align: center;">
+                <a href="{{ verification_link }}" class="button">Verify Email Address</a>
+            </div>
+            
+            <p>If you're having trouble with the button above, copy and paste the following URL into your browser:</p>
+            
+            <div class="details">
+                <a href="{{ verification_link }}">{{ verification_link }}</a>
+            </div>
+            
+            <div class="details">
+                <h3>Account Information:</h3>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Role:</strong> {{ user.get_role_display }}</p>
+            </div>
+            
+            <p>If you did not create an account with us, please disregard this email.</p>
+            
+            <p>Best regards,<br>The {{ site_name }} Team</p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>
