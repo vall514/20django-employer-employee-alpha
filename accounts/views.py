@@ -203,14 +203,30 @@ def profile_view(request):
     profile, created = EmployeeProfile.objects.get_or_create(user=request.user)
     departments = Department.objects.all()
     if request.method == 'POST':
+        # Update user information
+        request.user.first_name = request.POST.get('first_name', request.user.first_name)
+        request.user.last_name = request.POST.get('last_name', request.user.last_name)
+        
+        # Update profile information
         profile.phone = request.POST.get('phone', '')
         profile.address = request.POST.get('address', '')
-        profile.date_of_birth = request.POST.get('date_of_birth', None)
+        
+        # Handle date of birth (it might be empty)
+        date_of_birth = request.POST.get('date_of_birth')
+        if date_of_birth:
+            profile.date_of_birth = date_of_birth
+        else:
+            profile.date_of_birth = None
+        
+        # Update department
         department_id = request.POST.get('department')
         if department_id:
             request.user.department = Department.objects.get(id=department_id)
+        
+        # Save changes
         request.user.save()
         profile.save()
+        
         messages.success(request, 'Profile updated successfully.')
-        return redirect('core:dashboard')
+        return redirect('accounts:profile')  # Redirect to profile page to see changes
     return render(request, 'accounts/profile.html', {'profile': profile, 'departments': departments})
