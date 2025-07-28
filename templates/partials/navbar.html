@@ -93,6 +93,9 @@
     </div>
 </nav>
 
+{% comment %}
+Mobile menu toggle is now handled via data attributes and a simple script in-template to avoid external JS dependencies
+{% endcomment %}
 <script>
     document.getElementById('menu-toggle').addEventListener('click', function() {
         const mobileMenu = document.getElementById('mobile-menu');

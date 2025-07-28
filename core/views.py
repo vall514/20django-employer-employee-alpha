@@ -167,9 +167,32 @@ def attendance_check_in(request):
     if request.user.role != 'employee':
         messages.error(request, 'Only employees can check in.')
         return redirect('core:dashboard')
+    
+    from .forms import AttendanceForm
+    
     if request.method == 'POST':
-        note = request.POST.get('note', '')
-        Attendance.objects.create(employee=request.user, note=note)
-        messages.success(request, 'Checked in successfully.')
-        return redirect('core:dashboard')
-    return render(request, 'core/attendance_check_in.html')
+        form = AttendanceForm(request.POST)
+        if form.is_valid():
+            try:
+                from datetime import datetime
+                now = datetime.now()
+                attendance = form.save(commit=False)
+                attendance.employee = request.user
+                attendance.date = now.date()
+                attendance.check_in_time = now
+                attendance.save()
+                
+                formatted_time = now.strftime('%I:%M:%S %p')
+                formatted_date = now.strftime('%B %d, %Y')
+                messages.success(request, f'Checked in successfully on {formatted_date} at {formatted_time}.')
+                return redirect('core:dashboard')
+            except Exception as e:
+                messages.error(request, f'Error recording attendance: {str(e)}')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = AttendanceForm()
+        
+    return render(request, 'core/attendance_check_in.html', {'form': form})

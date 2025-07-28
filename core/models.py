@@ -35,7 +35,7 @@ class LeaveRequest(models.Model):
 class Attendance(models.Model):
     employee = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
-    check_in_time = models.DateTimeField(auto_now_add=True)
+    check_in_time = models.DateTimeField()
     note = models.TextField(blank=True)
 
     def __str__(self):

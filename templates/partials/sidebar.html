@@ -1,4 +1,4 @@
-<div class="w-64 bg-primary-dark text-white shadow-lg min-h-screen">
+<div class="w-64 {% if '/core/dashboard/' in request.path %}bg-gray-800{% else %}bg-primary-dark{% endif %} text-white shadow-lg min-h-screen">
     <div class="p-4">
         <div class="flex items-center justify-center p-2 mb-6">
             <div class="flex flex-col items-center">
@@ -13,7 +13,7 @@
         </div>
         <ul>
             <li class="mb-1">
-                <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/dashboard/' %}bg-primary{% endif %}">
+                <a href="{% url 'core:dashboard' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/dashboard/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                     <i class="fas fa-tachometer-alt w-6"></i>
                     <span>Dashboard</span>
                 </a>
@@ -21,53 +21,53 @@
             
             {% if user.role == 'employee' %}
                 <li class="mb-1">
-                    <a href="{% url 'core:leave_request' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/request/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:leave_request' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/request/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-calendar-alt w-6"></i>
                         <span>Request Leave</span>
                     </a>
                 </li>
                 <li class="mb-1">
-                    <a href="{% url 'core:monthly_report' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/report/submit/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:monthly_report' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/report/submit/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-file-alt w-6"></i>
                         <span>Submit Report</span>
                     </a>
                 </li>
                 <li class="mb-1">
-                    <a href="{% url 'core:attendance_check_in' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/attendance/check-in/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:attendance_check_in' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/attendance/check-in/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-clock w-6"></i>
                         <span>Check In</span>
                     </a>
                 </li>
             {% elif user.role == 'hod' %}
                 <li class="mb-1">
-                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-check-circle w-6"></i>
                         <span>Approve Leaves</span>
                     </a>
                 </li>
                 <li class="mb-1">
-                    <a href="{% url 'core:appraisal_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/appraisal/list/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:appraisal_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/appraisal/list/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-star w-6"></i>
                         <span>Submit Appraisals</span>
                     </a>
                 </li>
             {% elif user.role == 'hr' %}
                 <li class="mb-1">
-                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}bg-primary{% endif %}">
+                    <a href="{% url 'core:leave_approve_list' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/core/leave/approve-list/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                         <i class="fas fa-check-circle w-6"></i>
                         <span>Approve Leaves</span>
                     </a>
                 </li>
             {% endif %}
             
-            <li class="my-6 border-t border-primary pt-4">
-                <a href="{% url 'accounts:profile' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/accounts/profile/' %}bg-primary{% endif %}">
+            <li class="my-6 border-t {% if '/core/dashboard/' in request.path %}border-gray-700{% else %}border-primary{% endif %} pt-4">
+                <a href="{% url 'accounts:profile' %}" class="sidebar-link rounded-md flex items-center {% if request.path == '/accounts/profile/' %}{% if '/core/dashboard/' in request.path %}bg-gray-700{% else %}bg-primary{% endif %}{% endif %} hover:bg-gray-700">
                     <i class="fas fa-user w-6"></i>
                     <span>Profile</span>
                 </a>
             </li>
             <li class="mb-1">
-                <a href="{% url 'accounts:logout' %}" class="sidebar-link rounded-md flex items-center">
+                <a href="{% url 'accounts:logout' %}" class="sidebar-link rounded-md flex items-center hover:bg-gray-700">
                     <i class="fas fa-sign-out-alt w-6"></i>
                     <span>Logout</span>
                 </a>

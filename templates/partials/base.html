@@ -68,6 +68,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom sidebar styling -->
+    <style>
+      .sidebar-link {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        transition: all 0.2s ease;
+        border-radius: 0.375rem;
+      }
+      .bg-gray-800 .sidebar-link:hover {
+        background-color: rgba(55, 65, 81, 1);
+      }
+      .bg-gray-800 {
+        position: relative;
+        border-right: 1px solid rgba(75, 85, 99, 0.2);
+      }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body class="bg-background min-h-screen flex flex-col">
@@ -145,8 +161,66 @@
         {% endblock %}
     </div>
     {% include 'partials/footer.html' %}
-    <!-- Main JavaScript -->
-    <script src="/static/js/scripts.js"></script>
+    <!-- Essential JavaScript functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-dismiss alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert-auto-dismiss');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.classList.add('opacity-0');
+                    alert.style.transition = 'opacity 300ms';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }, 5000);
+            });
+
+            // Mobile menu toggle for the navbar
+            const menuToggle = document.getElementById('menu-toggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu) {
+                        mobileMenu.classList.toggle('hidden');
+                    }
+                });
+            }
+
+            // Tab system
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabGroup = this.closest('[role="tablist"]');
+                    const targetId = this.getAttribute('data-tab-target');
+                    
+                    // Hide all tab contents
+                    const tabContents = document.querySelectorAll('[role="tabpanel"]');
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    
+                    // Show the target tab content
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        targetContent.classList.remove('hidden');
+                    }
+                    
+                    // Update active state of tabs
+                    if (tabGroup) {
+                        const tabs = tabGroup.querySelectorAll('.tab-button');
+                        tabs.forEach(tab => {
+                            tab.classList.remove('tab-active', 'border-primary', 'text-primary');
+                            tab.classList.add('border-transparent', 'text-gray-500');
+                        });
+                    }
+                    
+                    this.classList.add('tab-active', 'border-primary', 'text-primary');
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                });
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
