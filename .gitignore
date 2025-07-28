@@ -14,5 +14,4 @@ media/
 static/collected/
 local_settings.py
 migrations/
-config/
 __pycache__/
