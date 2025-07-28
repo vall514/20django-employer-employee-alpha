@@ -34,8 +34,12 @@
     <div class="bg-white rounded-lg shadow-card overflow-hidden">
         <div class="p-6 bg-primary text-white">
             <div class="flex items-center">
-                <div class="w-20 h-20 rounded-full bg-white text-primary flex items-center justify-center text-3xl mr-4">
-                    <i class="fas fa-user"></i>
+                <div class="w-20 h-20 rounded-full bg-white text-primary flex items-center justify-center text-3xl mr-4 overflow-hidden">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="{{ user.get_full_name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <i class="fas fa-user"></i>
+                    {% endif %}
                 </div>
                 <div>
                     <h3 class="text-xl font-bold">{{ user.get_full_name }}</h3>
@@ -47,8 +51,25 @@
             </div>
         </div>
         
-        <form method="post" class="p-6 space-y-6">
+        <form method="post" class="p-6 space-y-6" enctype="multipart/form-data">
             {% csrf_token %}
+            
+            <div>
+                <label for="profile_picture" class="form-label">Profile Picture</label>
+                <div class="mt-1 flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-primary-light text-primary flex items-center justify-center text-xl overflow-hidden">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="{{ user.get_full_name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <i class="fas fa-user"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" id="profile_picture" name="profile_picture" accept="image/*" class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full">
+                        <p class="text-xs text-gray-500 mt-1">Upload a profile picture (JPG, PNG, or GIF). Maximum size: 5MB.</p>
+                    </div>
+                </div>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>

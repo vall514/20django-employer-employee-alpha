@@ -12,12 +12,28 @@
                     <a href="{% url 'core:dashboard' %}" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium">
                         <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
                     </a>
-                    <a href="{% url 'accounts:profile' %}" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium ml-2">
-                        <i class="fas fa-user-circle mr-1"></i> Profile
-                    </a>
-                    <a href="{% url 'accounts:logout' %}" class="text-white bg-primary-dark hover:bg-primary-hover px-3 py-2 rounded-md text-sm font-medium ml-2">
-                        <i class="fas fa-sign-out-alt mr-1"></i> Logout
-                    </a>
+                    
+                    <div class="relative ml-3">
+                        <div class="flex items-center space-x-3">
+                            <a href="{% url 'accounts:profile' %}" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium">
+                                <i class="fas fa-user-circle mr-1"></i> Profile
+                            </a>
+                            <a href="{% url 'accounts:logout' %}" class="text-white bg-primary-dark hover:bg-primary-hover px-3 py-2 rounded-md text-sm font-medium">
+                                <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                            </a>
+                            <a href="{% url 'accounts:profile' %}" class="inline-block">
+                                <div class="h-9 w-9 rounded-full overflow-hidden border-2 border-white">
+                                    {% if user.employeeprofile.profile_picture %}
+                                        <img src="{{ user.employeeprofile.profile_picture.url }}" alt="{{ user.get_full_name }}" class="h-full w-full object-cover">
+                                    {% else %}
+                                        <div class="bg-accent h-full w-full flex items-center justify-center text-white">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 {% else %}
                     <a href="{% url 'home' %}" class="text-white hover:bg-primary-dark px-3 py-2 rounded-md text-sm font-medium">
                         <i class="fas fa-home mr-1"></i> Home
@@ -41,6 +57,18 @@
     <div id="mobile-menu" class="md:hidden hidden bg-primary-dark">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {% if user.is_authenticated %}
+                <div class="flex items-center space-x-3 px-3 py-2">
+                    <div class="h-8 w-8 rounded-full overflow-hidden border-2 border-white">
+                        {% if user.employeeprofile.profile_picture %}
+                            <img src="{{ user.employeeprofile.profile_picture.url }}" alt="{{ user.get_full_name }}" class="h-full w-full object-cover">
+                        {% else %}
+                            <div class="bg-accent h-full w-full flex items-center justify-center text-white">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <span class="text-white text-sm font-medium">{{ user.get_full_name }}</span>
+                </div>
                 <a href="{% url 'core:dashboard' %}" class="text-white hover:bg-primary block px-3 py-2 rounded-md text-base font-medium">
                     <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
                 </a>

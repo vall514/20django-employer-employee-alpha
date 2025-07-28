@@ -217,6 +217,10 @@ def profile_view(request):
             profile.date_of_birth = date_of_birth
         else:
             profile.date_of_birth = None
+            
+        # Handle profile picture upload
+        if 'profile_picture' in request.FILES:
+            profile.profile_picture = request.FILES['profile_picture']
         
         # Update department
         department_id = request.POST.get('department')
