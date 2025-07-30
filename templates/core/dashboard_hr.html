@@ -2,454 +2,303 @@
 {% block title %}HR Dashboard{% endblock %}
 
 {% block main_content %}
-<div class="flex justify-between items-center mb-8">
-    <div>
-        <h1 class="text-2xl font-bold text-primary">Human Resources Dashboard</h1>
-        <p class="text-gray-600 mt-1">Welcome back, <span class="font-medium text-primary">{{ user.first_name }} {{ user.last_name }}</span></p>
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">HR Dashboard</h1>
+        <p class="text-gray-600">Welcome back, {{ user.get_full_name }}</p>
     </div>
-    <div class="flex items-center space-x-2">
-        <span class="bg-primary py-1 px-3 rounded-full text-white text-sm font-medium">
-            <i class="fas fa-user-tie mr-1"></i> HR Manager
-        </span>
-        <span class="text-sm text-gray-500">{{ user.email }}</span>
-    </div>
-</div>
 
-<!-- Quick Stats -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow-card p-6 transform transition-transform duration-300 hover:scale-105">
-        <div class="flex items-center">
-            <div class="rounded-full bg-primary-light bg-opacity-20 p-4 mr-4">
-                <i class="fas fa-users text-primary text-2xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-600 font-medium">Total Employees</h3>
-                <p class="text-2xl font-bold text-primary-dark">{{ all_employees|length }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-card p-6 transform transition-transform duration-300 hover:scale-105">
-        <div class="flex items-center">
-            <div class="rounded-full bg-warning-light bg-opacity-20 p-4 mr-4">
-                <i class="fas fa-calendar-check text-warning text-2xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-600 font-medium">Pending Leaves</h3>
-                <p class="text-2xl font-bold text-warning">{{ leave_requests|length }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-card p-6 transform transition-transform duration-300 hover:scale-105">
-        <div class="flex items-center">
-            <div class="rounded-full bg-success-light bg-opacity-20 p-4 mr-4">
-                <i class="fas fa-file-alt text-success text-2xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-600 font-medium">Reports</h3>
-                <p class="text-2xl font-bold text-success">{{ reports|length }}</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-card p-6 transform transition-transform duration-300 hover:scale-105">
-        <div class="flex items-center">
-            <div class="rounded-full bg-accent-light bg-opacity-20 p-4 mr-4">
-                <i class="fas fa-star text-accent text-2xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-600 font-medium">Appraisals</h3>
-                <p class="text-2xl font-bold text-accent">{{ appraisals|length }}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Leave Approvals Section -->
-<div class="bg-white rounded-lg shadow-card overflow-hidden mb-8">
-    <div class="bg-warning text-white px-6 py-4 flex justify-between items-center">
-        <h2 class="text-lg font-semibold">Pending Leave Approvals</h2>
-        <span class="bg-white text-warning py-1 px-3 rounded-full text-sm font-medium">
-            {{ leave_requests|length }} Pending
-        </span>
-    </div>
-    <div class="p-6">
-        {% if leave_requests %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for leave in leave_requests %}
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0 h-10 w-10 bg-warning-light text-white rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900">{{ leave.employee.username }}</div>
-                                        <div class="text-sm text-gray-500">{{ leave.employee.email|default:"No email" }}</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ leave.start_date }} to {{ leave.end_date }}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="text-sm text-gray-900 max-w-xs truncate">{{ leave.reason }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <form method="post" action="{% url 'core:leave_approve' leave.id %}" class="inline-flex space-x-2">
-                                    {% csrf_token %}
-                                    <button name="action" value="approve" class="bg-success hover:bg-success-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
-                                        <i class="fas fa-check mr-1"></i> Approve
-                                    </button>
-                                    <button name="action" value="reject" class="bg-danger hover:bg-danger-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
-                                        <i class="fas fa-times mr-1"></i> Reject
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="flex flex-col items-center justify-center py-12">
-                <div class="text-gray-400 mb-3">
-                    <i class="fas fa-calendar-check text-5xl"></i>
+    <!-- Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-card p-6 border-l-4 border-primary">
+            <div class="flex items-center">
+                <div class="rounded-full bg-primary-light bg-opacity-20 p-3 mr-4">
+                    <i class="fas fa-users text-primary text-xl"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No pending leave requests</h3>
-                <p class="text-gray-500 text-center max-w-md">You're all caught up! There are no leave requests that require your approval at this time.</p>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Data Tabs Section -->
-<div class="bg-white rounded-lg shadow-card overflow-hidden">
-    <div class="border-b border-gray-200">
-        <div class="flex overflow-x-auto hide-scrollbar">
-            <button id="tab-employees" class="tab-button tab-active text-primary border-primary px-6 py-4 text-center border-b-2 font-medium whitespace-nowrap flex items-center">
-                <i class="fas fa-users mr-2"></i> Employees
-            </button>
-            <button id="tab-reports" class="tab-button text-gray-500 hover:text-gray-700 px-6 py-4 text-center border-b-2 border-transparent font-medium whitespace-nowrap flex items-center">
-                <i class="fas fa-file-alt mr-2"></i> Monthly Reports
-            </button>
-            <button id="tab-appraisals" class="tab-button text-gray-500 hover:text-gray-700 px-6 py-4 text-center border-b-2 border-transparent font-medium whitespace-nowrap flex items-center">
-                <i class="fas fa-star mr-2"></i> Appraisals
-            </button>
-            <button id="tab-attendance" class="tab-button text-gray-500 hover:text-gray-700 px-6 py-4 text-center border-b-2 border-transparent font-medium whitespace-nowrap flex items-center">
-                <i class="fas fa-clock mr-2"></i> Attendance Records
-            </button>
-        </div>
-    </div>
-    
-    <!-- Employees Tab Content -->
-    <div id="content-employees" class="tab-content p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-primary-dark">Employee Directory</h3>
-            <div class="relative">
-                <input type="text" placeholder="Search employees..." class="border border-gray-300 rounded-md py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:border-primary text-sm">
-                <div class="absolute left-3 top-2.5 text-gray-400">
-                    <i class="fas fa-search"></i>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Total Employees</h3>
+                    <p class="text-2xl font-bold text-primary">{{ all_employees|length }}</p>
                 </div>
             </div>
         </div>
         
-        {% if all_employees %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for employee in all_employees %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 bg-primary-light text-white rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ employee.first_name }} {{ employee.last_name }}</div>
-                                            <div class="text-sm text-gray-500">{{ employee.email|default:"No email" }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ employee.get_role_display|default:"Employee" }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ employee.department.name|default:"Not assigned" }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Active
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="#" class="text-primary hover:text-primary-dark mr-3">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="#" class="text-success hover:text-success-dark mr-3">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </td>
+        <div class="bg-white rounded-lg shadow-card p-6 border-l-4 border-warning">
+            <div class="flex items-center">
+                <div class="rounded-full bg-warning-light bg-opacity-20 p-3 mr-4">
+                    <i class="fas fa-clock text-warning text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Pending Leaves</h3>
+                    <p class="text-2xl font-bold text-warning">{{ leave_requests|length }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-card p-6 border-l-4 border-success">
+            <div class="flex items-center">
+                <div class="rounded-full bg-success-light bg-opacity-20 p-3 mr-4">
+                    <i class="fas fa-file-alt text-success text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Reports</h3>
+                    <p class="text-2xl font-bold text-success">{{ reports|length }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-card p-6 border-l-4 border-secondary">
+            <div class="flex items-center">
+                <div class="rounded-full bg-secondary-light bg-opacity-20 p-3 mr-4">
+                    <i class="fas fa-star text-secondary text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700">Appraisals</h3>
+                    <p class="text-2xl font-bold text-secondary">{{ appraisals|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Approvals Section -->
+    <div class="bg-white rounded-lg shadow-card mb-8">
+        <div class="border-b border-gray-200">
+            <div class="p-5 flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    <i class="fas fa-calendar-alt text-primary mr-2"></i> Pending Leave Approvals
+                </h2>
+                <span class="bg-warning-light text-warning px-3 py-1 rounded-full text-sm font-medium">
+                    {{ leave_requests|length }} Pending
+                </span>
+            </div>
+        </div>
+        <div class="p-5">
+            {% if leave_requests %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-background-alt">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="flex flex-col items-center justify-center py-12">
-                <div class="text-gray-400 mb-3">
-                    <i class="fas fa-users text-5xl"></i>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for leave in leave_requests %}
+                                <tr class="hover:bg-background-alt transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{{ leave.employee.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ leave.start_date }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ leave.end_date }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ leave.reason }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <form method="post" action="{% url 'core:leave_approve' leave.id %}" class="inline-flex space-x-2">
+                                            {% csrf_token %}
+                                            <button name="action" value="approve" class="bg-success hover:bg-success-dark text-white px-3 py-1 rounded text-sm transition-colors duration-150">
+                                                <i class="fas fa-check mr-1"></i> Approve
+                                            </button>
+                                            <button name="action" value="reject" class="bg-danger hover:bg-danger-dark text-white px-3 py-1 rounded text-sm transition-colors duration-150">
+                                                <i class="fas fa-times mr-1"></i> Reject
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No employees found</h3>
-                <p class="text-gray-500 text-center max-w-md">There are no employees registered in the system yet.</p>
-            </div>
-        {% endif %}
+            {% else %}
+                <div class="text-center py-6">
+                    <div class="text-5xl text-gray-300 mb-4">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <p class="text-gray-500">No pending leave approvals at the moment.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-    
-    <!-- Reports Tab Content -->
-    <div id="content-reports" class="tab-content hidden p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-primary-dark">Monthly Reports</h3>
-            <div>
-                <select class="border border-gray-300 rounded-md py-2 px-4 focus:ring-2 focus:ring-primary focus:border-primary text-sm">
-                    <option>All Months</option>
-                    <option>January 2025</option>
-                    <option>February 2025</option>
-                    <option>March 2025</option>
-                </select>
-            </div>
+
+    <!-- Tabs for other sections -->
+    <div class="bg-white rounded-lg shadow-card">
+        <div class="border-b border-gray-200">
+            <nav class="flex -mb-px">
+                <button id="tab-employees" class="tab-button tab-active text-primary border-primary px-4 py-4 text-center border-b-2 font-medium text-sm sm:text-base flex-1 sm:flex-none">
+                    <i class="fas fa-users mr-2"></i> Employees
+                </button>
+                <button id="tab-reports" class="tab-button text-gray-500 hover:text-gray-700 px-4 py-4 text-center border-b-2 border-transparent font-medium text-sm sm:text-base flex-1 sm:flex-none">
+                    <i class="fas fa-file-alt mr-2"></i> Reports
+                </button>
+                <button id="tab-appraisals" class="tab-button text-gray-500 hover:text-gray-700 px-4 py-4 text-center border-b-2 border-transparent font-medium text-sm sm:text-base flex-1 sm:flex-none">
+                    <i class="fas fa-star mr-2"></i> Appraisals
+                </button>
+                <button id="tab-attendance" class="tab-button text-gray-500 hover:text-gray-700 px-4 py-4 text-center border-b-2 border-transparent font-medium text-sm sm:text-base flex-1 sm:flex-none">
+                    <i class="fas fa-clock mr-2"></i> Attendance
+                </button>
+            </nav>
         </div>
         
-        {% if reports %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for report in reports %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 bg-success-light text-white rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ report.employee.username }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ report.month|date:"F Y" }}</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900 max-w-xs truncate">{{ report.description }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-500">{{ report.created_at|date:"M d, Y" }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    {% if report.file %}
-                                        <a href="{{ report.file.url }}" class="bg-success hover:bg-success-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
-                                            <i class="fas fa-download mr-1"></i> Download
+        <!-- Employees Tab Content -->
+        <div id="content-employees" class="tab-content p-5">
+            {% if all_employees %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-background-alt">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for employee in all_employees %}
+                                <tr class="hover:bg-background-alt transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{{ employee.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ employee.role|title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ employee.department.name|default:"None" }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="#" class="text-primary hover:text-primary-dark transition-colors duration-150">
+                                            <i class="fas fa-eye mr-1"></i> View
                                         </a>
-                                    {% else %}
-                                        <span class="text-gray-400 text-xs">No file</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="flex flex-col items-center justify-center py-12">
-                <div class="text-gray-400 mb-3">
-                    <i class="fas fa-file-alt text-5xl"></i>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No reports submitted</h3>
-                <p class="text-gray-500 text-center max-w-md">No monthly reports have been submitted by employees yet.</p>
-            </div>
-        {% endif %}
-    </div>
-    
-    <!-- Appraisals Tab Content -->
-    <div id="content-appraisals" class="tab-content hidden p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-primary-dark">Performance Appraisals</h3>
-            <div>
-                <select class="border border-gray-300 rounded-md py-2 px-4 focus:ring-2 focus:ring-primary focus:border-primary text-sm">
-                    <option>All Departments</option>
-                    <option>Engineering</option>
-                    <option>Marketing</option>
-                    <option>Finance</option>
-                </select>
-            </div>
+            {% else %}
+                <div class="text-center py-6">
+                    <div class="text-5xl text-gray-300 mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <p class="text-gray-500">No employees found in the system.</p>
+                </div>
+            {% endif %}
         </div>
         
-        {% if appraisals %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evaluation Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evaluated By</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for appraisal in appraisals %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10 bg-accent-light text-white rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900">{{ appraisal.employee.username }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <span class="text-sm font-medium 
-                                            {% if appraisal.score >= 8 %}text-success
-                                            {% elif appraisal.score >= 5 %}text-warning
-                                            {% else %}text-danger{% endif %}">
+        <!-- Reports Tab Content -->
+        <div id="content-reports" class="tab-content hidden p-5">
+            {% if reports %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-background-alt">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for report in reports %}
+                                <tr class="hover:bg-background-alt transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{{ report.employee.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ report.month|date:"F Y" }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ report.description }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        {% if report.file %}
+                                            <a href="{{ report.file.url }}" class="text-primary hover:text-primary-dark transition-colors duration-150">
+                                                <i class="fas fa-download mr-1"></i> Download
+                                            </a>
+                                        {% else %}
+                                            <span class="text-gray-400">No file</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-6">
+                    <div class="text-5xl text-gray-300 mb-4">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <p class="text-gray-500">No reports have been submitted yet.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Appraisals Tab Content -->
+        <div id="content-appraisals" class="tab-content hidden p-5">
+            {% if appraisals %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-background-alt">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evaluator</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for appraisal in appraisals %}
+                                <tr class="hover:bg-background-alt transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{{ appraisal.employee.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                            {% if appraisal.score >= 8 %}bg-success-light text-success-dark
+                                            {% elif appraisal.score >= 5 %}bg-warning-light text-warning-dark
+                                            {% else %}bg-danger-light text-danger-dark{% endif %}">
                                             {{ appraisal.score }}/10
                                         </span>
-                                        <div class="ml-2 flex">
-                                            {% for i in "12345678910"|make_list %}
-                                                {% if forloop.counter <= appraisal.score %}
-                                                    <i class="fas fa-star text-accent text-xs"></i>
-                                                {% else %}
-                                                    <i class="far fa-star text-gray-300 text-xs"></i>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ appraisal.date }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ appraisal.evaluator.username }}</div>
-                                    <div class="text-xs text-gray-500">{{ appraisal.evaluator.get_role_display }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="#" class="bg-primary hover:bg-primary-dark text-white py-1 px-3 rounded text-xs font-medium inline-flex items-center transition-colors">
-                                        <i class="fas fa-eye mr-1"></i> View Details
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="flex flex-col items-center justify-center py-12">
-                <div class="text-gray-400 mb-3">
-                    <i class="fas fa-star text-5xl"></i>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ appraisal.date }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ appraisal.evaluator.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <a href="#" class="text-primary hover:text-primary-dark transition-colors duration-150">
+                                            <i class="fas fa-eye mr-1"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No appraisals recorded</h3>
-                <p class="text-gray-500 text-center max-w-md">Department heads have not submitted any employee performance appraisals yet.</p>
-            </div>
-        {% endif %}
-    </div>
-    
-    <!-- Attendance Tab Content -->
-    <div id="content-attendance" class="tab-content hidden p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-primary-dark">Attendance Records</h3>
-            <div class="flex space-x-2">
-                <input type="date" class="border border-gray-300 rounded-md py-2 px-4 focus:ring-2 focus:ring-primary focus:border-primary text-sm">
-                <button class="bg-primary hover:bg-primary-dark text-white py-2 px-4 rounded-md text-sm font-medium transition-colors">
-                    <i class="fas fa-filter mr-1"></i> Filter
-                </button>
-            </div>
+            {% else %}
+                <div class="text-center py-6">
+                    <div class="text-5xl text-gray-300 mb-4">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-500">No appraisals have been recorded yet.</p>
+                </div>
+            {% endif %}
         </div>
         
-        {% if attendance %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr class="bg-gray-50">
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-In Time</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Note</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for att in attendance %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-8 w-8 bg-primary-light text-white rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="ml-3">
-                                            <div class="text-sm font-medium text-gray-900">{{ att.employee.username }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ att.employee.department.name|default:"Not assigned" }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ att.date }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">{{ att.check_in_time|time:"H:i" }}</div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-500 max-w-xs truncate">{{ att.note|default:"-" }}</div>
-                                </td>
+        <!-- Attendance Tab Content -->
+        <div id="content-attendance" class="tab-content hidden p-5">
+            {% if attendance %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr class="bg-background-alt">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-In Time</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="flex flex-col items-center justify-center py-12">
-                <div class="text-gray-400 mb-3">
-                    <i class="fas fa-clock text-5xl"></i>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for att in attendance %}
+                                <tr class="hover:bg-background-alt transition-colors duration-150">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{{ att.employee.username }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ att.date }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ att.check_in_time }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900 mb-1">No attendance records</h3>
-                <p class="text-gray-500 text-center max-w-md">No employees have checked in today.</p>
-            </div>
-        {% endif %}
+            {% else %}
+                <div class="text-center py-6">
+                    <div class="text-5xl text-gray-300 mb-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <p class="text-gray-500">No attendance records found.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-</div>
 
 {% endblock %}
 

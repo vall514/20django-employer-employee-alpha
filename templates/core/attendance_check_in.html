@@ -7,15 +7,40 @@
             <div class="bg-success text-white px-6 py-4 flex justify-between">
                 <div>
                     <h2 class="text-xl font-semibold">Daily Check-In</h2>
-                    <p class="text-sm mt-1">Time and date will be recorded automatically</p>
+                    <p class="text-sm mt-1">Deadline: 9:00 AM (Nairobi Time)</p>
                 </div>
-                <div class="text-sm">
-                    {% now "F j, Y" as current_date %}
-                    {% now "h:i A" as current_time %}
-                    <span class="font-mono">{{ current_date }}</span><br>
-                    <span class="font-mono">{{ current_time }}</span>
+                <div class="text-sm text-right">
+                    <span class="font-mono">{{ current_time|date:"F j, Y" }}</span><br>
+                    <span class="font-mono text-lg">{{ current_time|time:"h:i A" }}</span><br>
+                    {% if is_late %}
+                        <span class="bg-yellow-500 text-white px-2 py-1 rounded text-xs mt-1 inline-block">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>LATE
+                        </span>
+                    {% else %}
+                        <span class="bg-green-600 text-white px-2 py-1 rounded text-xs mt-1 inline-block">
+                            <i class="fas fa-check mr-1"></i>ON TIME
+                        </span>
+                    {% endif %}
                 </div>
             </div>
+            
+            <!-- Time Status Info -->
+            <div class="px-6 py-3 {% if is_late %}bg-yellow-50 border-l-4 border-yellow-400{% else %}bg-green-50 border-l-4 border-green-400{% endif %}">
+                <div class="flex items-center">
+                    {% if is_late %}
+                        <i class="fas fa-clock text-yellow-600 mr-2"></i>
+                        <p class="text-yellow-800 text-sm">
+                            <strong>Late Check-in:</strong> The 9:00 AM deadline has passed. Your attendance will be marked as late.
+                        </p>
+                    {% else %}
+                        <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                        <p class="text-green-800 text-sm">
+                            <strong>On-time Check-in:</strong> You're checking in within the 9:00 AM deadline.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            
             <div class="p-6">
                 <form method="post">
                     {% csrf_token %}
@@ -26,11 +51,27 @@
                             <p class="text-danger text-sm mt-1">{{ form.note.errors|join:", " }}</p>
                         {% endif %}
                     </div>
+                    
+                    <!-- Attendance Graph Link for Employee -->
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-blue-800 font-medium">View Your Attendance History</h3>
+                                <p class="text-blue-600 text-sm">Track your attendance patterns and punctuality</p>
+                            </div>
+                            <a href="{% url 'core:employee_attendance_detail' user.id %}" 
+                               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm transition duration-200">
+                                <i class="fas fa-chart-line mr-1"></i> View Graph
+                            </a>
+                        </div>
+                    </div>
+                    
                     <button 
                         type="submit" 
-                        class="w-full bg-success hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
+                        class="w-full {% if is_late %}bg-yellow-500 hover:bg-yellow-600{% else %}bg-success hover:bg-green-700{% endif %} text-white font-medium py-3 px-4 rounded-md transition duration-200 ease-in-out flex items-center justify-center"
                     >
-                        <i class="fas fa-clock mr-2"></i> Check In Now
+                        <i class="fas fa-clock mr-2"></i> 
+                        {% if is_late %}Check In (Late){% else %}Check In Now{% endif %}
                     </button>
                 </form>
             </div>

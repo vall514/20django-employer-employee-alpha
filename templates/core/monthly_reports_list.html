@@ -1,0 +1,204 @@
+{% extends 'partials/base.html' %}
+{% block title %}Monthly Reports{% endblock %}
+{% block main_content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-primary">Monthly Reports</h2>
+            <p class="text-gray-600 mt-1">
+                {% if user.role == 'hod' %}
+                    Reports from {{ user.department.name }} department
+                {% else %}
+                    All employee monthly reports
+                {% endif %}
+            </p>
+        </div>
+        <span class="px-3 py-1 bg-primary text-white rounded-full text-sm">
+            {{ user.get_role_display }}
+        </span>
+    </div>
+
+    {% if reports %}
+        <div class="bg-white rounded-lg shadow-card overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Employee
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Department
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Report Period
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Submitted
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for report in reports %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-sm font-medium mr-3">
+                                        {% if report.employee.employeeprofile and report.employee.employeeprofile.profile_picture %}
+                                            <img src="{{ report.employee.employeeprofile.profile_picture.url }}" alt="{{ report.employee.get_full_name }}" class="w-full h-full object-cover rounded-full">
+                                        {% else %}
+                                            {{ report.employee.first_name|first }}{{ report.employee.last_name|first }}
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ report.employee.get_full_name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ report.employee.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {% if report.employee.department %}
+                                    {{ report.employee.department.name }}
+                                {% else %}
+                                    <span class="text-gray-400">No Department</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ report.report_date|date:"F Y" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <div>{{ report.submitted_at|date:"M d, Y" }}</div>
+                                <div class="text-xs text-gray-500">{{ report.submitted_at|time:"h:i A" }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if report.is_submitted_on_time %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> On Time
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-exclamation-circle mr-1"></i> Late
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    {% if report.file %}
+                                        <a href="{{ report.file.url }}" target="_blank" class="text-primary hover:text-primary-dark">
+                                            <i class="fas fa-download mr-1"></i> Download
+                                        </a>
+                                    {% endif %}
+                                    <button onclick="showReportDetails('{{ report.id }}')" class="text-secondary hover:text-secondary-dark">
+                                        <i class="fas fa-eye mr-1"></i> View
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Report Details Modal -->
+        <div id="reportModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+            <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-medium text-gray-900" id="modalTitle">Report Details</h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="modalContent" class="text-sm text-gray-500">
+                        <!-- Content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="bg-white rounded-lg shadow-card p-8 text-center">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-file-alt text-2xl text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No Reports Found</h3>
+            <p class="text-gray-500">
+                {% if user.role == 'hod' %}
+                    No monthly reports have been submitted by employees in your department yet.
+                {% else %}
+                    No monthly reports have been submitted by any employees yet.
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+function showReportDetails(reportId) {
+    // Find the report data from the table
+    const reportRow = document.querySelector(`tr:has(button[onclick="showReportDetails('${reportId}')"])`);
+    const employeeName = reportRow.querySelector('td:nth-child(1) .text-sm.font-medium').textContent.trim();
+    const department = reportRow.querySelector('td:nth-child(2)').textContent.trim();
+    const reportPeriod = reportRow.querySelector('td:nth-child(3)').textContent.trim();
+    const submittedDate = reportRow.querySelector('td:nth-child(4) div:first-child').textContent.trim();
+    const submittedTime = reportRow.querySelector('td:nth-child(4) div:last-child').textContent.trim();
+    const status = reportRow.querySelector('td:nth-child(5) span').textContent.trim();
+    
+    document.getElementById('modalTitle').textContent = `${employeeName} - ${reportPeriod} Report`;
+    document.getElementById('modalContent').innerHTML = `
+        <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="font-medium text-gray-700">Employee:</label>
+                    <p class="text-gray-900">${employeeName}</p>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700">Department:</label>
+                    <p class="text-gray-900">${department}</p>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700">Report Period:</label>
+                    <p class="text-gray-900">${reportPeriod}</p>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700">Submission Status:</label>
+                    <p class="text-gray-900">${status}</p>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700">Submitted Date:</label>
+                    <p class="text-gray-900">${submittedDate}</p>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700">Submitted Time:</label>
+                    <p class="text-gray-900">${submittedTime}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('reportModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('reportModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('reportModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

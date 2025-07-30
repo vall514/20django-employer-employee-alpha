@@ -122,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -167,3 +167,9 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'WorkPulse EMS <noreply@wor
 # WorkPulse EMS specific settings
 SITE_NAME = os.getenv('SITE_NAME', 'WorkPulse EMS')
 SITE_URL = os.getenv('SITE_URL', 'http://localhost:8000')
+
+# CSRF settings for development
+CSRF_COOKIE_SECURE = False  # Set to True in production with HTTPS
+CSRF_COOKIE_HTTPONLY = False
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_SAMESITE = 'Lax'

@@ -47,7 +47,13 @@
             </div>
             <div>
                 <p class="text-sm text-gray-500 mb-1">Department Performance</p>
-                <h3 class="text-xl font-bold text-gray-800">Good</h3>
+                <h3 class="text-xl font-bold 
+                    {% if department_performance >= 80 %}text-green-600
+                    {% elif department_performance >= 60 %}text-yellow-600
+                    {% else %}text-red-600{% endif %}">
+                    {{ department_performance|floatformat:1 }}%
+                </h3>
+                <p class="text-xs text-gray-500">Based on timely report submissions</p>
             </div>
         </div>
     </div>
