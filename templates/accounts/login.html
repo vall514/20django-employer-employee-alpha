@@ -1,50 +1,89 @@
 {% extends 'partials/base.html' %}
 {% block title %}Login{% endblock %}
 {% block public_content %}
-<div class="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-secondary py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-bold text-primary-dark">
-                <i class="fas fa-building mr-2"></i>WorkPulse EMS
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-800">
-                Sign in to your account
-            </p>
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-white rounded-full flex items-center justify-center shadow-lg mb-4">
+                <i class="fas fa-building text-primary text-2xl"></i>
+            </div>
+            <h2 class="text-4xl font-bold text-white mb-2">WorkPulse EMS</h2>
+            <p class="text-blue-100 text-lg">Sign in to your account</p>
         </div>
-        <div class="bg-white p-8 rounded-lg shadow-card">
+        
+        <div class="bg-white rounded-xl shadow-2xl p-8 space-y-6">
+            <!-- Display messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-50 border border-red-200 text-red-800{% elif message.tags == 'success' %}bg-green-50 border border-green-200 text-green-800{% elif message.tags == 'warning' %}bg-yellow-50 border border-yellow-200 text-yellow-800{% else %}bg-blue-50 border border-blue-200 text-blue-800{% endif %}">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle text-red-400{% elif message.tags == 'success' %}fa-check-circle text-green-400{% elif message.tags == 'warning' %}fa-exclamation-triangle text-yellow-400{% else %}fa-info-circle text-blue-400{% endif %} text-lg"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 <div>
-                    <label for="username" class="form-label">Username</label>
-                    <div class="mt-1">
-                        <input type="text" id="username" name="username" required class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" placeholder="Enter your username">
-                    </div>
+                    <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2 text-primary"></i>Username
+                    </label>
+                    <input type="text" 
+                           id="username" 
+                           name="username" 
+                           required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 text-gray-900 placeholder-gray-500" 
+                           placeholder="Enter your username">
                 </div>
+                
                 <div>
-                    <label for="password" class="form-label">Password</label>
-                    <div class="mt-1">
-                        <input type="password" id="password" name="password" required class="form-control focus:ring-2 focus:ring-primary focus:border-primary block w-full" placeholder="Enter your password">
-                    </div>
+                    <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-lock mr-2 text-primary"></i>Password
+                    </label>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 text-gray-900 placeholder-gray-500" 
+                           placeholder="Enter your password">
                 </div>
+                
                 <div>
-                    <button type="submit" class="btn-primary w-full flex justify-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Sign in
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary-dark hover:to-secondary-dark text-white font-semibold py-3 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105 shadow-lg flex items-center justify-center">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
                     </button>
                 </div>
             </form>
+            
+            <div class="text-center space-y-4 pt-4 border-t border-gray-200">
+                <p class="text-gray-600">
+                    Don't have an account? 
+                    <a href="{% url 'accounts:register' %}" 
+                       class="text-primary hover:text-primary-dark font-semibold transition duration-200">
+                        Register here
+                    </a>
+                </p>
+                <p class="text-gray-600">
+                    Didn't receive verification email?
+                    <a href="{% url 'accounts:resend_verification' %}" 
+                       class="text-secondary hover:text-secondary-dark font-semibold transition duration-200">
+                        Resend verification
+                    </a>
+                </p>
+            </div>
         </div>
-        <div class="text-center mt-4 space-y-2">
-            <p class="text-sm text-gray-800">
-                Don't have an account? 
-                <a href="{% url 'accounts:register' %}" class="text-primary-dark hover:text-primary font-medium">
-                    Register here
-                </a>
-            </p>
-            <p class="text-sm text-gray-800">
-                Didn't receive verification email?
-                <a href="{% url 'accounts:resend_verification' %}" class="text-primary-dark hover:text-primary font-medium">
-                    Resend verification
-                </a>
+        
+        <div class="text-center">
+            <p class="text-blue-100 text-sm">
+                © 2025 WorkPulse EMS. All rights reserved.
             </p>
         </div>
     </div>
